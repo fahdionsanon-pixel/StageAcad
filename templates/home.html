@@ -26,10 +26,6 @@
             {% if user.is_authenticated %}
               <a href="{% url 'stages:dashboard' %}" class="hover:text-white transition">Tableau de bord</a>
               <a href="{% url 'stages:stage_list' %}" class="hover:text-white transition">Suivi de stage</a>
-            {% else %}
-              <a href="{% url 'accounts:register' %}" class="hover:text-white transition">Étudiants</a>
-              <a href="{% url 'accounts:register' %}" class="hover:text-white transition">Entreprises</a>
-              <a href="{% url 'accounts:register' %}" class="hover:text-white transition">Encadreurs</a>
             {% endif %}
           </nav>
         </div>
@@ -40,9 +36,6 @@
               Mon espace ({{ user.first_name|default:user.username }})
             </a>
           {% else %}
-            <a href="{% url 'accounts:register' %}" class="hidden sm:inline text-slate-200 underline underline-offset-4 hover:text-white transition">
-              Écoles et entreprises
-            </a>
             <a href="{% url 'accounts:login' %}" class="text-white hover:text-[#10D18E] transition">
               Se connecter
             </a>
@@ -87,21 +80,6 @@
               Rechercher
             </button>
           </form>
-
-          <!-- Filtres rapides par domaine -->
-          <div class="mt-5 flex flex-wrap items-center gap-2.5 text-xs font-semibold">
-            <span class="text-slate-300">Je cherche :</span>
-            <a href="{% url 'stages:offre_list' %}"
-              class="px-4 py-2 rounded-full bg-[#10D18E] text-[#04394E] font-bold hover:bg-[#0EC482] transition">
-              Toutes les offres
-            </a>
-            {% for d in domaines %}
-              <a href="{% url 'stages:offre_list' %}?domaine={{ d|urlencode }}"
-                class="px-4 py-2 rounded-full border border-white/25 text-white hover:border-[#10D18E] hover:text-[#10D18E] transition">
-                {{ d }}
-              </a>
-            {% endfor %}
-          </div>
         </div>
 
         <!-- Colonne droite : Carte aperçu StageSearch -->
