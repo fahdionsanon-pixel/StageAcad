@@ -4,7 +4,7 @@ from .models import Candidature, OffreStage, RapportSuivi, Stage
 
 INPUT_CLASS = (
     "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 "
-    "shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+    "shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
 )
 
 
@@ -33,7 +33,7 @@ class OffreStageForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for name, field in self.fields.items():
             if name == "est_active":
-                field.widget.attrs["class"] = "h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                field.widget.attrs["class"] = "h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             elif "class" not in field.widget.attrs:
                 field.widget.attrs["class"] = INPUT_CLASS
 
@@ -53,8 +53,8 @@ class CandidatureForm(forms.ModelForm):
             "cv": forms.ClearableFileInput(
                 attrs={
                     "class": "block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 "
-                    "file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 "
-                    "hover:file:bg-indigo-100"
+                    "file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 "
+                    "hover:file:bg-blue-100"
                 }
             ),
         }
@@ -105,8 +105,8 @@ class RapportSuiviForm(forms.ModelForm):
             "document": forms.ClearableFileInput(
                 attrs={
                     "class": "block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 "
-                    "file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 "
-                    "hover:file:bg-indigo-100"
+                    "file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 "
+                    "hover:file:bg-blue-100"
                 }
             ),
         }
