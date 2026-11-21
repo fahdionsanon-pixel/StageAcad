@@ -4,8 +4,8 @@
 {% block content %}
   {% if user.is_etudiant %}
     <!-- ACCUEIL ÉTUDIANT (Design moderne épuré) -->
-    <!-- Carte de bienvenue bleu clair + anneau de progression -->
-    <section class="rounded-2xl bg-[#EBF3FF] border border-blue-100 p-6 sm:p-8 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+    <!-- Carte de bienvenue bleu clair -->
+    <section class="rounded-2xl bg-[#EBF3FF] border border-blue-100 p-6 sm:p-8 mb-6">
       <div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           Bonjour {{ user.first_name|default:user.display_name }}
@@ -33,21 +33,6 @@
               Mes candidatures ({{ nb_candidatures }})
             </a>
           {% endif %}
-        </div>
-      </div>
-
-      <!-- Anneau circulaire X/5 étapes -->
-      <div class="relative flex items-center justify-center shrink-0 self-center sm:self-auto">
-        <svg class="w-24 h-24 -rotate-90" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="34" fill="white" stroke="#E2E8F0" stroke-width="6"></circle>
-          <circle cx="40" cy="40" r="34" fill="none" stroke="#22C55E" stroke-width="6"
-            stroke-linecap="round"
-            stroke-dasharray="213.6"
-            stroke-dashoffset="{{ ring_offset }}"></circle>
-        </svg>
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span class="text-lg font-extrabold text-slate-900 leading-none">{{ etapes_validees }}/5</span>
-          <span class="text-[11px] font-medium text-slate-500 mt-0.5">étapes</span>
         </div>
       </div>
     </section>
