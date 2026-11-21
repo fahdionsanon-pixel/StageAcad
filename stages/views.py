@@ -19,13 +19,14 @@ from .models import Candidature, OffreStage, RapportSuivi, Stage
 
 def home(request):
     offres_recentes = OffreStage.objects.filter(est_active=True).select_related("entreprise")[:6]
+    domaines = OffreStage.objects.filter(est_active=True).values_list("domaine", flat=True).distinct().order_by("domaine")[:4]
     stats = {
         "offres": OffreStage.objects.filter(est_active=True).count(),
         "entreprises": User.objects.filter(role=User.Role.ENTREPRISE).count(),
         "etudiants": User.objects.filter(role=User.Role.ETUDIANT).count(),
         "stages": Stage.objects.count(),
     }
-    return render(request, "home.html", {"offres_recentes": offres_recentes, "stats": stats})
+    return render(request, "home.html", {"offres_recentes": offres_recentes, "domaines": domaines, "stats": stats})
 
 
 @login_required
