@@ -241,10 +241,11 @@ def offre_list(request):
         offres = offres.filter(lieu__icontains=lieu)
 
     domaines = OffreStage.objects.values_list("domaine", flat=True).distinct().order_by("domaine")
+    villes = OffreStage.Ville.choices
     return render(
         request,
         "stages/offre_list.html",
-        {"offres": offres, "domaines": domaines, "q": q, "domaine": domaine, "lieu": lieu},
+        {"offres": offres, "domaines": domaines, "villes": villes, "q": q, "domaine": domaine, "lieu": lieu},
     )
 
 

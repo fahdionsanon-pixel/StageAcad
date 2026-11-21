@@ -26,7 +26,7 @@ class StageWorkflowTests(TestCase):
             titre="Stage Backend Django",
             entreprise=self.entreprise,
             domaine="Informatique",
-            lieu="Paris",
+            lieu=OffreStage.Ville.OUAGADOUGOU,
             duree_mois=3,
             date_debut=today + timedelta(days=10),
             date_limite=today + timedelta(days=30),

@@ -27,9 +27,13 @@
       </div>
 
       <h1 class="text-2xl font-bold text-slate-900">{{ offre.titre }}</h1>
-      <p class="text-sm text-slate-600 mt-1 font-medium">{{ offre.entreprise.display_name }} • {{ offre.lieu }}</p>
+      <p class="text-sm text-slate-600 mt-1 font-medium">{{ offre.entreprise.display_name }}</p>
 
-      <div class="grid sm:grid-cols-3 gap-3 my-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+      <div class="grid sm:grid-cols-4 gap-3 my-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+        <div>
+          <span class="block text-xs text-slate-500">Ville du stage</span>
+          <span class="font-semibold text-slate-900">{{ offre.get_lieu_display }}</span>
+        </div>
         <div>
           <span class="block text-xs text-slate-500">Durée</span>
           <span class="font-semibold text-slate-900">{{ offre.duree_mois }} mois</span>

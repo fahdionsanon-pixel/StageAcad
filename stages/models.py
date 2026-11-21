@@ -6,6 +6,17 @@ from django.utils import timezone
 
 
 class OffreStage(models.Model):
+    class Ville(models.TextChoices):
+        OUAGADOUGOU = "Ouagadougou", "Ouagadougou"
+        BOBO_DIOULASSO = "Bobo-Dioulasso", "Bobo-Dioulasso"
+        ABIDJAN = "Abidjan", "Abidjan"
+        DAKAR = "Dakar", "Dakar"
+        BAMAKO = "Bamako", "Bamako"
+        LOME = "Lomé", "Lomé"
+        COTONOU = "Cotonou", "Cotonou"
+        NIAMEY = "Niamey", "Niamey"
+        TELETRAVAIL = "Télétravail", "Télétravail"
+
     titre = models.CharField(max_length=200, verbose_name="Intitulé du stage")
     entreprise = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -14,7 +25,12 @@ class OffreStage(models.Model):
         verbose_name="Entreprise",
     )
     domaine = models.CharField(max_length=120, verbose_name="Domaine")
-    lieu = models.CharField(max_length=150, verbose_name="Lieu")
+    lieu = models.CharField(
+        max_length=150,
+        choices=Ville.choices,
+        default=Ville.OUAGADOUGOU,
+        verbose_name="Ville du stage",
+    )
     duree_mois = models.PositiveIntegerField(
         default=3,
         validators=[MinValueValidator(1), MaxValueValidator(24)],
