@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Mes candidatures — StageAcad{% endblock %}
+
+{% block content %}
+  <!-- En-tête + bouton Voir les offres -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        {% if user.is_etudiant %}Mes candidatures{% else %}Candidatures{% endif %}
+      </h1>
+    </div>
+    <a href="{% url 'stages:offre_list' %}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition self-start sm:self-auto">
+      Voir les offres
+    </a>
+  </div>
+
+  <!-- Onglets de filtrage en pilules avec compteurs -->
+  <div class="flex flex-wrap items-center gap-2.5 mb-6">
+    <a href="{% url 'stages:candidature_list' %}"
+      class="px-4 py-2 rounded-full text-sm font-semibold transition
+      {% if not statut_filtre %}bg-blue-600 text-white shadow-sm{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+      Toutes <span class="ml-1 opacity-80">{{ counts.all }}</span>
+    </a>
+    <a href="{% url 'stages:candidature_list' %}?statut=EN_ATTENTE"
+      class="px-4 py-2 rounded-full text-sm font-semibold transition
+      {% if statut_filtre == 'EN_ATTENTE' %}bg-blue-600 text-white shadow-sm{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+      En attente <span class="ml-1 opacity-80">{{ counts.EN_ATTENTE }}</span>
+    </a>
+    <a href="{% url 'stages:candidature_list' %}?statut=ACCEPTEE"
+      class="px-4 py-2 rounded-full text-sm font-semibold transition
+      {% if statut_filtre == 'ACCEPTEE' %}bg-blue-600 text-white shadow-sm{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+      Acceptée <span class="ml-1 opacity-80">{{ counts.ACCEPTEE }}</span>
+    </a>
+    <a href="{% url 'stages:candidature_list' %}?statut=REFUSEE"
+      class="px-4 py-2 rounded-full text-sm font-semibold transition
+      {% if statut_filtre == 'REFUSEE' %}bg-blue-600 text-white shadow-sm{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+      Refusée <span class="ml-1 opacity-80">{{ counts.REFUSEE }}</span>
+    </a>
+  </div>
+
+  <!-- Tableau épuré des candidatures -->
+  {% if candidatures %}
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-100 text-sm">
+        <thead>
+          <tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            <th class="px-6 py-4">Poste</th>
+            {% if not user.is_etudiant %}
+              <th class="px-6 py-4">Candidat</th>
+            {% endif %}
+            <th class="px-6 py-4">Déposée le</th>
+            <th class="px-6 py-4">Statut</th>
+            <th class="px-6 py-4 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for cand in candidatures %}
+            <tr class="hover:bg-slate-50/70 transition">
+              <td class="px-6 py-4">
+                <p class="font-bold text-slate-900">{{ cand.offre.titre }}</p>
+                <p class="text-xs text-slate-500 mt-0.5">{{ cand.offre.entreprise.display_name }}</p>
+                {% if cand.commentaire_entreprise %}
+                  <p class="text-xs text-slate-500 mt-1 italic">« {{ cand.commentaire_entreprise }} »</p>
+                {% endif %}
+              </td>
+              {% if not user.is_etudiant %}
+                <td class="px-6 py-4">
+                  <p class="font-semibold text-slate-800">{{ cand.etudiant.display_name }}</p>
+                  <p class="text-xs text-slate-500">{{ cand.etudiant.filiere }} {{ cand.etudiant.niveau }}</p>
+                  {% if cand.cv %}
+                    <a href="{{ cand.cv.url }}" target="_blank" class="text-xs font-semibold text-blue-600 hover:underline">Voir CV</a>
+                  {% endif %}
+                </td>
+              {% endif %}
+              <td class="px-6 py-4 text-slate-600 whitespace-nowrap">
+                {{ cand.date_candidature|date:"j F" }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold
+                  {% if cand.statut == 'ACCEPTEE' %}bg-emerald-50 text-emerald-700
+                  {% elif cand.statut == 'REFUSEE' %}bg-red-50 text-red-700
+                  {% else %}bg-amber-50 text-amber-700{% endif %}">
+                  {{ cand.get_statut_display }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right whitespace-nowrap">
+                {% if cand.statut == 'EN_ATTENTE' and user.is_entreprise or cand.statut == 'EN_ATTENTE' and user.is_admin_role %}
+                  <div class="inline-flex items-center gap-2">
+                    <form method="post" action="{% url 'stages:candidature_decider' cand.pk 'accepter' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="px-3 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700">
+                        Accepter
+                      </button>
+                    </form>
+                    <form method="post" action="{% url 'stages:candidature_decider' cand.pk 'refuser' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="px-3 py-1.5 rounded-full bg-red-50 text-red-700 text-xs font-semibold hover:bg-red-100">
+                        Refuser
+                      </button>
+                    </form>
+                  </div>
+                {% else %}
+                  <a href="{% url 'stages:offre_detail' cand.offre_id %}" class="font-semibold text-blue-600 hover:text-blue-800">
+                    Ouvrir
+                  </a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-10 text-center text-slate-500 shadow-sm">
+      Aucune candidature dans cette catégorie.
+    </div>
+  {% endif %}
+{% endblock %}

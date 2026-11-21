@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Stages & Suivi — StageAcad{% endblock %}
+
+{% block content %}
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Stages &amp; Affectation des encadreurs</h1>
+      <p class="text-sm text-slate-500">Consultez l'avancement des stages, affectez les encadreurs et accédez aux rapports de suivi.</p>
+    </div>
+    <form method="get">
+      <select name="statut" onchange="this.form.submit()" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
+        <option value="">Tous les statuts</option>
+        {% for code, label in statuts %}
+          <option value="{{ code }}" {% if statut_filtre == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  {% if stages %}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase">
+          <tr>
+            <th class="px-5 py-3.5">Sujet du stage</th>
+            <th class="px-5 py-3.5">Étudiant</th>
+            <th class="px-5 py-3.5">Entreprise</th>
+            <th class="px-5 py-3.5">Encadreur</th>
+            <th class="px-5 py-3.5">Avancement</th>
+            <th class="px-5 py-3.5">Statut</th>
+            <th class="px-5 py-3.5 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for stage in stages %}
+            <tr class="hover:bg-slate-50/70">
+              <td class="px-5 py-4 font-semibold text-slate-900">{{ stage.titre }}</td>
+              <td class="px-5 py-4 text-slate-700">{{ stage.etudiant.display_name }}</td>
+              <td class="px-5 py-4 text-slate-600">{{ stage.entreprise.display_name }}</td>
+              <td class="px-5 py-4">
+                {% if stage.encadreur %}
+                  <span class="text-slate-800 font-medium">{{ stage.encadreur.display_name }}</span>
+                {% else %}
+                  <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold">Non affecté</span>
+                {% endif %}
+              </td>
+              <td class="px-5 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-20 bg-slate-200 rounded-full h-2">
+                    <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ stage.dernier_avancement }}%"></div>
+                  </div>
+                  <span class="text-xs font-medium text-slate-600">{{ stage.dernier_avancement }}%</span>
+                </div>
+              </td>
+              <td class="px-5 py-4">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold
+                  {% if stage.statut == 'EN_COURS' %}bg-blue-100 text-blue-700
+                  {% elif stage.statut == 'TERMINE' %}bg-emerald-100 text-emerald-700
+                  {% elif stage.statut == 'ANNULE' %}bg-red-100 text-red-700
+                  {% else %}bg-amber-100 text-amber-700{% endif %}">
+                  {{ stage.get_statut_display }}
+                </span>
+              </td>
+              <td class="px-5 py-4 text-right">
+                <a href="{% url 'stages:stage_detail' stage.pk %}" class="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-semibold hover:bg-indigo-100">
+                  Détails &amp; Suivi
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="bg-white rounded-xl border border-slate-200 p-10 text-center text-slate-500">
+      Aucun stage enregistré pour le moment.
+    </div>
+  {% endif %}
+{% endblock %}

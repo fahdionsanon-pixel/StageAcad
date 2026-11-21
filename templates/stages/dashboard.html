@@ -1,0 +1,380 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord — StageAcad{% endblock %}
+
+{% block content %}
+  {% if user.is_etudiant %}
+    <!-- ACCUEIL ÉTUDIANT (Design moderne épuré) -->
+    <!-- Carte de bienvenue bleu clair + anneau de progression -->
+    <section class="rounded-2xl bg-[#EBF3FF] border border-blue-100 p-6 sm:p-8 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Bonjour {{ user.first_name|default:user.display_name }}
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600 mt-1.5">
+          {% if stage_actif %}
+            Votre rapport n°{{ prochain_rapport_num }} est prêt à être déposé pour votre stage chez <span class="font-semibold text-slate-800">{{ stage_actif.entreprise.display_name }}</span>.
+          {% else %}
+            Consultez les offres de stage ouvertes et suivez vos candidatures en temps réel.
+          {% endif %}
+        </p>
+        <div class="mt-5 flex flex-wrap items-center gap-4">
+          {% if stage_actif %}
+            <a href="{% url 'stages:stage_detail' stage_actif.pk %}" class="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition">
+              Déposer le rapport
+            </a>
+            <a href="{% url 'stages:stage_detail' stage_actif.pk %}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">
+              Voir mon dossier
+            </a>
+          {% else %}
+            <a href="{% url 'stages:offre_list' %}" class="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition">
+              Explorer les offres
+            </a>
+            <a href="{% url 'stages:candidature_list' %}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">
+              Mes candidatures ({{ nb_candidatures }})
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Anneau circulaire X/5 étapes -->
+      <div class="relative flex items-center justify-center shrink-0 self-center sm:self-auto">
+        <svg class="w-24 h-24 -rotate-90" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="white" stroke="#E2E8F0" stroke-width="6"></circle>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#22C55E" stroke-width="6"
+            stroke-linecap="round"
+            stroke-dasharray="213.6"
+            stroke-dashoffset="{{ ring_offset }}"></circle>
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+          <span class="text-lg font-extrabold text-slate-900 leading-none">{{ etapes_validees }}/5</span>
+          <span class="text-[11px] font-medium text-slate-500 mt-0.5">étapes</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Suivi du dossier (Stepper 5 étapes) -->
+    <section class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm mb-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+        <h2 class="text-base font-bold text-slate-900">Suivi du dossier</h2>
+        {% if stage_actif %}
+          <p class="text-xs font-medium text-slate-500">
+            {{ stage_actif.entreprise.display_name }}, du {{ stage_actif.date_debut|date:"j F" }} au {{ stage_actif.date_fin|date:"j F Y" }}
+          </p>
+        {% endif %}
+      </div>
+
+      <div class="relative grid grid-cols-2 sm:grid-cols-5 gap-4">
+        {% for etape in etapes %}
+          <div class="relative flex flex-col items-start sm:items-center text-left sm:text-center">
+            <!-- Ligne de connexion desktop -->
+            {% if not forloop.last %}
+              <div class="hidden sm:block absolute top-4 left-1/2 w-full h-0.5 {% if etape.done %}bg-blue-600{% else %}bg-slate-200{% endif %}"></div>
+            {% endif %}
+
+            <!-- Cercle d'étape -->
+            <div class="relative z-10 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold
+              {% if etape.done %}bg-blue-600 text-white
+              {% elif etape.current %}bg-emerald-500 text-white ring-4 ring-emerald-500/20
+              {% else %}bg-white border-2 border-slate-200 text-slate-400{% endif %}">
+              {% if etape.done %}
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              {% else %}
+                {{ etape.num }}
+              {% endif %}
+            </div>
+
+            <p class="mt-2.5 text-sm font-semibold {% if etape.done or etape.current %}text-slate-900{% else %}text-slate-400{% endif %}">
+              {{ etape.label }}
+            </p>
+            <p class="text-xs text-slate-500 mt-0.5">{{ etape.meta }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Grille inférieure : Prochaines échéances + Mon encadreur -->
+    <div class="grid md:grid-cols-5 gap-6">
+      <section class="md:col-span-3 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+        <h2 class="text-base font-bold text-slate-900 mb-4">Prochaines échéances</h2>
+        <div class="divide-y divide-slate-100">
+          {% for item in echeances %}
+            <div class="py-3.5 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <div class="h-12 w-12 rounded-xl bg-blue-50 text-blue-700 flex flex-col items-center justify-center shrink-0">
+                  <span class="text-sm font-extrabold leading-none">{{ item.jour }}</span>
+                  <span class="text-[11px] font-medium mt-0.5">{{ item.mois }}</span>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-slate-900">{{ item.titre }}</p>
+                  <p class="text-xs text-slate-500 mt-0.5">{{ item.sous_titre }}</p>
+                </div>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-semibold shrink-0 {{ item.badge_class }}">
+                {{ item.badge }}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="md:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 mb-4">Mon encadreur</h2>
+          {% if stage_actif and stage_actif.encadreur %}
+            <div class="flex items-center gap-3.5">
+              <div class="h-12 w-12 rounded-full bg-blue-600 text-white font-bold text-sm flex items-center justify-center shrink-0">
+                {{ stage_actif.encadreur.initials }}
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-bold text-slate-900 truncate">{{ stage_actif.encadreur.display_name }}</p>
+                <p class="text-xs text-slate-500 truncate">{{ stage_actif.encadreur.filiere|default:"Encadreur académique" }}</p>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center gap-2 text-xs text-slate-600">
+              <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <span class="truncate">{{ stage_actif.encadreur.email }}</span>
+            </div>
+          {% else %}
+            <p class="text-sm text-slate-500">Aucun encadreur académique affecté pour le moment.</p>
+          {% endif %}
+        </div>
+
+        {% if stage_actif and stage_actif.encadreur %}
+          <a href="mailto:{{ stage_actif.encadreur.email }}?subject=Suivi%20de%20stage%20-%20{{ stage_actif.titre|urlencode }}"
+            class="mt-5 w-full inline-flex items-center justify-center px-4 py-2.5 rounded-full border border-blue-600 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition">
+            Écrire un message
+          </a>
+        {% elif stage_actif %}
+          <a href="{% url 'stages:stage_detail' stage_actif.pk %}"
+            class="mt-5 w-full inline-flex items-center justify-center px-4 py-2.5 rounded-full border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition">
+            Voir mon stage
+          </a>
+        {% endif %}
+      </section>
+    </div>
+
+  {% elif user.is_admin_role %}
+    <!-- Dashboard Admin -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-2xl font-extrabold text-slate-900">Tableau de bord Administrateur</h1>
+        <p class="text-sm text-slate-500 mt-0.5">Vue globale des offres, candidatures et affectations d'encadreurs.</p>
+      </div>
+      <a href="{% url 'stages:offre_create' %}" class="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm">
+        + Publier une offre
+      </a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+        <p class="text-xs font-medium text-slate-500 uppercase">Offres de stage</p>
+        <p class="mt-2 text-3xl font-extrabold text-blue-600">{{ nb_offres }}</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+        <p class="text-xs font-medium text-slate-500 uppercase">Candidatures</p>
+        <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ nb_candidatures }}</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+        <p class="text-xs font-medium text-slate-500 uppercase">Stages enregistrés</p>
+        <p class="mt-2 text-3xl font-extrabold text-emerald-600">{{ nb_stages }}</p>
+      </div>
+      <div class="bg-amber-50/70 rounded-2xl border border-amber-200 p-5 shadow-sm">
+        <p class="text-xs font-medium text-amber-700 uppercase">Sans encadreur</p>
+        <p class="mt-2 text-3xl font-extrabold text-amber-600">{{ stages_sans_encadreur|length }}</p>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-bold text-slate-900">Stages en attente d'encadreur</h2>
+          <a href="{% url 'stages:stage_list' %}" class="text-xs font-semibold text-blue-600 hover:underline">Tout voir</a>
+        </div>
+        {% if stages_sans_encadreur %}
+          <ul class="divide-y divide-slate-100">
+            {% for stage in stages_sans_encadreur %}
+              <li class="py-3 flex items-center justify-between gap-3">
+                <div>
+                  <p class="font-semibold text-sm text-slate-900">{{ stage.titre }}</p>
+                  <p class="text-xs text-slate-500">{{ stage.etudiant.display_name }} • {{ stage.entreprise.display_name }}</p>
+                </div>
+                <a href="{% url 'stages:stage_detail' stage.pk %}" class="px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold hover:bg-amber-200">
+                  Affecter
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-sm text-slate-500">Tous les stages ont un encadreur affecté.</p>
+        {% endif %}
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-bold text-slate-900">Dernières candidatures</h2>
+          <a href="{% url 'stages:candidature_list' %}" class="text-xs font-semibold text-blue-600 hover:underline">Tout voir</a>
+        </div>
+        {% if dernieres_candidatures %}
+          <ul class="divide-y divide-slate-100">
+            {% for cand in dernieres_candidatures %}
+              <li class="py-3 flex items-center justify-between gap-3">
+                <div>
+                  <p class="font-semibold text-sm text-slate-900">{{ cand.etudiant.display_name }}</p>
+                  <p class="text-xs text-slate-500">{{ cand.offre.titre }}</p>
+                </div>
+                <span class="px-3 py-0.5 rounded-full text-xs font-semibold
+                  {% if cand.statut == 'ACCEPTEE' %}bg-emerald-50 text-emerald-700
+                  {% elif cand.statut == 'REFUSEE' %}bg-red-50 text-red-700
+                  {% else %}bg-amber-50 text-amber-700{% endif %}">
+                  {{ cand.get_statut_display }}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-sm text-slate-500">Aucune candidature enregistrée.</p>
+        {% endif %}
+      </div>
+    </div>
+
+  {% elif user.is_entreprise %}
+    <!-- Dashboard Entreprise -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-2xl font-extrabold text-slate-900">{{ user.display_name }}</h1>
+        <p class="text-sm text-slate-500 mt-0.5">Espace Entreprise partenaire</p>
+      </div>
+      <a href="{% url 'stages:offre_create' %}" class="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm">
+        + Publier une offre
+      </a>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+        <p class="text-xs font-medium text-slate-500 uppercase">Mes offres publiées</p>
+        <p class="mt-2 text-3xl font-extrabold text-blue-600">{{ nb_offres }}</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+        <p class="text-xs font-medium text-slate-500 uppercase">Candidatures en attente</p>
+        <p class="mt-2 text-3xl font-extrabold text-amber-600">{{ nb_candidatures_attente }}</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+        <p class="text-xs font-medium text-slate-500 uppercase">Stagiaires accueillis</p>
+        <p class="mt-2 text-3xl font-extrabold text-emerald-600">{{ nb_stages }}</p>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-bold text-slate-900">Candidatures reçues</h2>
+          <a href="{% url 'stages:candidature_list' %}" class="text-xs font-semibold text-blue-600 hover:underline">Gérer tout</a>
+        </div>
+        {% if candidatures_recues %}
+          <ul class="divide-y divide-slate-100">
+            {% for cand in candidatures_recues %}
+              <li class="py-3 flex items-center justify-between gap-3">
+                <div>
+                  <p class="font-semibold text-sm text-slate-900">{{ cand.etudiant.display_name }}</p>
+                  <p class="text-xs text-slate-500">{{ cand.offre.titre }}</p>
+                </div>
+                <span class="px-3 py-0.5 rounded-full text-xs font-semibold
+                  {% if cand.statut == 'ACCEPTEE' %}bg-emerald-50 text-emerald-700
+                  {% elif cand.statut == 'REFUSEE' %}bg-red-50 text-red-700
+                  {% else %}bg-amber-50 text-amber-700{% endif %}">
+                  {{ cand.get_statut_display }}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-sm text-slate-500">Aucune candidature reçue pour le moment.</p>
+        {% endif %}
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-bold text-slate-900">Mes dernières offres</h2>
+          <a href="{% url 'stages:offre_create' %}" class="text-xs font-semibold text-blue-600 hover:underline">+ Nouvelle</a>
+        </div>
+        {% if mes_offres %}
+          <ul class="divide-y divide-slate-100">
+            {% for offre in mes_offres %}
+              <li class="py-3 flex items-center justify-between gap-3">
+                <div>
+                  <a href="{% url 'stages:offre_detail' offre.pk %}" class="font-semibold text-sm text-slate-900 hover:text-blue-600">{{ offre.titre }}</a>
+                  <p class="text-xs text-slate-500">{{ offre.lieu }} • Limite : {{ offre.date_limite|date:"d/m/Y" }}</p>
+                </div>
+                <span class="text-xs font-medium text-slate-500">{{ offre.candidatures.count }} cand.</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-sm text-slate-500">Vous n'avez pas encore publié d'offre.</p>
+        {% endif %}
+      </div>
+    </div>
+
+  {% else %}
+    <!-- Dashboard Encadreur -->
+    <div class="mb-6">
+      <h1 class="text-2xl font-extrabold text-slate-900">Bonjour {{ user.display_name }}</h1>
+      <p class="text-sm text-slate-500 mt-0.5">Espace Encadreur académique</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4 mb-6">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+        <p class="text-xs font-medium text-slate-500 uppercase">Stages encadrés</p>
+        <p class="mt-2 text-3xl font-extrabold text-blue-600">{{ nb_stages }}</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+        <p class="text-xs font-medium text-slate-500 uppercase">Rapports à réviser</p>
+        <p class="mt-2 text-3xl font-extrabold text-amber-600">{{ nb_rapports_attente }}</p>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+        <h2 class="font-bold text-slate-900 mb-4">Mes stagiaires</h2>
+        {% if stages_encadres %}
+          <ul class="divide-y divide-slate-100">
+            {% for stage in stages_encadres %}
+              <li class="py-3 flex items-center justify-between gap-3">
+                <div>
+                  <p class="font-semibold text-sm text-slate-900">{{ stage.etudiant.display_name }}</p>
+                  <p class="text-xs text-slate-500">{{ stage.titre }} — {{ stage.entreprise.display_name }}</p>
+                </div>
+                <a href="{% url 'stages:stage_detail' stage.pk %}" class="px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-600 text-xs font-semibold hover:bg-blue-100">
+                  Suivre
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-sm text-slate-500">Aucun stage ne vous est encore affecté.</p>
+        {% endif %}
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+        <h2 class="font-bold text-slate-900 mb-4">Rapports en attente de validation</h2>
+        {% if rapports_attente %}
+          <ul class="divide-y divide-slate-100">
+            {% for rapport in rapports_attente %}
+              <li class="py-3 flex items-center justify-between gap-3">
+                <div>
+                  <p class="font-semibold text-sm text-slate-900">{{ rapport.titre }}</p>
+                  <p class="text-xs text-slate-500">{{ rapport.auteur.display_name }} • {{ rapport.avancement_pourcent }}%</p>
+                </div>
+                <a href="{% url 'stages:stage_detail' rapport.stage_id %}" class="px-3.5 py-1.5 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold hover:bg-amber-100">
+                  Réviser
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-sm text-slate-500">Aucun rapport en attente.</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% block title %}{{ stage.titre }} — Suivi de stage{% endblock %}
+
+{% block content %}
+  <div class="mb-4">
+    <a href="{% url 'stages:stage_list' %}" class="text-sm text-slate-500 hover:text-indigo-600">← Retour aux stages</a>
+  </div>
+
+  <!-- En-tête du stage -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-6">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold
+          {% if stage.statut == 'EN_COURS' %}bg-blue-100 text-blue-700
+          {% elif stage.statut == 'TERMINE' %}bg-emerald-100 text-emerald-700
+          {% elif stage.statut == 'ANNULE' %}bg-red-100 text-red-700
+          {% else %}bg-amber-100 text-amber-700{% endif %}">
+          {{ stage.get_statut_display }}
+        </span>
+        <h1 class="text-2xl font-bold text-slate-900 mt-2">{{ stage.titre }}</h1>
+        <p class="text-sm text-slate-500 mt-1">Du {{ stage.date_debut|date:"d/m/Y" }} au {{ stage.date_fin|date:"d/m/Y" }}</p>
+      </div>
+      {% if stage.note_finale is not None %}
+        <div class="rounded-xl bg-emerald-50 border border-emerald-200 px-5 py-3 text-center">
+          <span class="block text-xs font-medium text-emerald-700 uppercase">Note finale</span>
+          <span class="text-2xl font-extrabold text-emerald-800">{{ stage.note_finale }} / 20</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-slate-100 text-sm">
+      <div>
+        <span class="block text-xs text-slate-500 uppercase font-medium">Étudiant stagiaire</span>
+        <p class="font-semibold text-slate-900 mt-0.5">{{ stage.etudiant.display_name }}</p>
+        <p class="text-xs text-slate-500">{{ stage.etudiant.filiere }} {{ stage.etudiant.niveau }}</p>
+      </div>
+      <div>
+        <span class="block text-xs text-slate-500 uppercase font-medium">Entreprise d'accueil</span>
+        <p class="font-semibold text-slate-900 mt-0.5">{{ stage.entreprise.display_name }}</p>
+        <p class="text-xs text-slate-500">{{ stage.entreprise.email }}</p>
+      </div>
+      <div>
+        <span class="block text-xs text-slate-500 uppercase font-medium">Encadreur académique</span>
+        {% if stage.encadreur %}
+          <p class="font-semibold text-slate-900 mt-0.5">{{ stage.encadreur.display_name }}</p>
+          <p class="text-xs text-slate-500">{{ stage.encadreur.specialite|default:stage.encadreur.email }}</p>
+        {% else %}
+          <p class="font-semibold text-amber-700 mt-0.5">En attente d'affectation</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if stage.appreciation_finale %}
+      <div class="mt-5 p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+        <p class="text-xs font-semibold text-slate-500 uppercase mb-1">Appréciation finale</p>
+        <p class="text-slate-700">{{ stage.appreciation_finale }}</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6">
+    <!-- Colonne principale : Journal & Rapports de suivi -->
+    <div class="lg:col-span-2 space-y-6">
+      {% if rapport_form %}
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <h2 class="font-bold text-slate-900 text-lg mb-4">Soumettre un rapport / point de suivi</h2>
+          <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="soumettre_rapport">
+            <div class="grid sm:grid-cols-3 gap-4">
+              <div class="sm:col-span-2">
+                <label class="block text-sm font-medium text-slate-700 mb-1">{{ rapport_form.titre.label }}</label>
+                {{ rapport_form.titre }}
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">{{ rapport_form.avancement_pourcent.label }}</label>
+                {{ rapport_form.avancement_pourcent }}
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">{{ rapport_form.contenu.label }}</label>
+              {{ rapport_form.contenu }}
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">{{ rapport_form.document.label }}</label>
+              {{ rapport_form.document }}
+            </div>
+            <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 shadow-sm">
+              Envoyer le rapport
+            </button>
+          </form>
+        </div>
+      {% endif %}
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <h2 class="font-bold text-slate-900 text-lg mb-4">Historique des rapports de suivi ({{ rapports|length }})</h2>
+        {% if rapports %}
+          <div class="space-y-5">
+            {% for rapport in rapports %}
+              <article class="rounded-xl border border-slate-200 p-5 bg-slate-50/50">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <h3 class="font-bold text-slate-900">{{ rapport.titre }}</h3>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">
+                      {{ rapport.avancement_pourcent }}%
+                    </span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold
+                      {% if rapport.statut == 'VALIDE' %}bg-emerald-100 text-emerald-700
+                      {% elif rapport.statut == 'A_CORRIGER' %}bg-red-100 text-red-700
+                      {% else %}bg-amber-100 text-amber-700{% endif %}">
+                      {{ rapport.get_statut_display }}
+                    </span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-500 mb-3">
+                  Soumis par {{ rapport.auteur.display_name }} le {{ rapport.date_soumission|date:"d/m/Y à H:i" }}
+                </p>
+                <p class="text-sm text-slate-700 whitespace-pre-line">{{ rapport.contenu }}</p>
+                {% if rapport.document %}
+                  <p class="mt-3">
+                    <a href="{{ rapport.document.url }}" target="_blank" class="text-xs font-semibold text-indigo-600 hover:underline">
+                      📎 Télécharger le document joint
+                    </a>
+                  </p>
+                {% endif %}
+
+                {% if rapport.commentaire_encadreur %}
+                  <div class="mt-4 p-3 rounded-lg bg-white border border-slate-200 text-xs text-slate-700">
+                    <span class="font-semibold text-slate-900">Retour de l'encadreur :</span>
+                    {{ rapport.commentaire_encadreur }}
+                  </div>
+                {% endif %}
+
+                {% if peut_reviser %}
+                  <form method="post" action="{% url 'stages:rapport_reviser' rapport.pk %}" class="mt-4 pt-4 border-t border-slate-200 space-y-3">
+                    {% csrf_token %}
+                    <p class="text-xs font-semibold text-slate-600 uppercase">Révision encadreur</p>
+                    <div class="grid sm:grid-cols-3 gap-3">
+                      <select name="statut" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs">
+                        <option value="VALIDE" {% if rapport.statut == 'VALIDE' %}selected{% endif %}>Validé</option>
+                        <option value="A_CORRIGER" {% if rapport.statut == 'A_CORRIGER' %}selected{% endif %}>À corriger</option>
+                        <option value="SOUMIS" {% if rapport.statut == 'SOUMIS' %}selected{% endif %}>Soumis</option>
+                      </select>
+                      <input type="text" name="commentaire_encadreur" value="{{ rapport.commentaire_encadreur }}"
+                        placeholder="Commentaire de validation..."
+                        class="sm:col-span-2 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs">
+                    </div>
+                    <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800">
+                      Enregistrer la révision
+                    </button>
+                  </form>
+                {% endif %}
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-sm text-slate-500">Aucun rapport de suivi soumis pour le moment.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Colonne latérale : Affectation & Évaluation -->
+    <div class="space-y-6">
+      {% if affectation_form %}
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <h2 class="font-bold text-slate-900 text-base mb-3">Affectation de l'encadreur</h2>
+          <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="affecter_encadreur">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">{{ affectation_form.encadreur.label }}</label>
+              {{ affectation_form.encadreur }}
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">{{ affectation_form.statut.label }}</label>
+              {{ affectation_form.statut }}
+            </div>
+            <button type="submit" class="w-full py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">
+              Enregistrer l'affectation
+            </button>
+          </form>
+        </div>
+      {% endif %}
+
+      {% if evaluation_form %}
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <h2 class="font-bold text-slate-900 text-base mb-3">Évaluation finale du stage</h2>
+          <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="evaluer_stage">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">{{ evaluation_form.statut.label }}</label>
+              {{ evaluation_form.statut }}
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">{{ evaluation_form.note_finale.label }}</label>
+              {{ evaluation_form.note_finale }}
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">{{ evaluation_form.appreciation_finale.label }}</label>
+              {{ evaluation_form.appreciation_finale }}
+            </div>
+            <button type="submit" class="w-full py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700">
+              Enregistrer l'évaluation
+            </button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
