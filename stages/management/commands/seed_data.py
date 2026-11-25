@@ -17,7 +17,7 @@ class Command(BaseCommand):
             defaults={
                 "first_name": "Nadia",
                 "last_name": "Benali",
-                "email": "admin@univ-stages.edu",
+                "email": "nadiabenali@gmail.com",
                 "role": User.Role.ADMIN,
                 "organisation": "Service des Stages Académiques",
                 "is_staff": True,
@@ -32,7 +32,7 @@ class Command(BaseCommand):
             defaults={
                 "first_name": "Marc",
                 "last_name": "Laurent",
-                "email": "rh@techvision.fr",
+                "email": "marclaurent@gmail.com",
                 "role": User.Role.ENTREPRISE,
                 "organisation": "TechVision Solutions",
                 "telephone": "+33 1 42 68 50 10",
@@ -46,7 +46,7 @@ class Command(BaseCommand):
             defaults={
                 "first_name": "Sophie",
                 "last_name": "Mercier",
-                "email": "stages@datanexus.io",
+                "email": "sophiemercier@gmail.com",
                 "role": User.Role.ENTREPRISE,
                 "organisation": "DataNexus Analytics",
                 "telephone": "+33 4 72 10 22 33",
@@ -55,12 +55,54 @@ class Command(BaseCommand):
         ent2.set_password("demo1234")
         ent2.save()
 
+        ent3, _ = User.objects.get_or_create(
+            username="fasofinance",
+            defaults={
+                "first_name": "Ibrahim",
+                "last_name": "Ouédraogo",
+                "email": "ibrahimouedraogo@gmail.com",
+                "role": User.Role.ENTREPRISE,
+                "organisation": "Faso Finance & Conseil",
+                "telephone": "+226 25 30 44 12",
+            },
+        )
+        ent3.set_password("demo1234")
+        ent3.save()
+
+        ent4, _ = User.objects.get_or_create(
+            username="sahelbtp",
+            defaults={
+                "first_name": "Amadou",
+                "last_name": "Traoré",
+                "email": "amadoutraore@gmail.com",
+                "role": User.Role.ENTREPRISE,
+                "organisation": "Sahel BTP & Ingénierie",
+                "telephone": "+226 20 97 18 45",
+            },
+        )
+        ent4.set_password("demo1234")
+        ent4.save()
+
+        ent5, _ = User.objects.get_or_create(
+            username="agrisol",
+            defaults={
+                "first_name": "Fatou",
+                "last_name": "Diop",
+                "email": "fatoudiop@gmail.com",
+                "role": User.Role.ENTREPRISE,
+                "organisation": "AgriSol Afrique",
+                "telephone": "+221 33 821 40 90",
+            },
+        )
+        ent5.set_password("demo1234")
+        ent5.save()
+
         enc1, _ = User.objects.get_or_create(
             username="prof_dupont",
             defaults={
                 "first_name": "Dr. Jean",
                 "last_name": "Dupont",
-                "email": "j.dupont@univ-stages.edu",
+                "email": "jeandupont@gmail.com",
                 "role": User.Role.ENCADREUR,
                 "filiere": "Informatique & Génie Logiciel",
                 "specialite": "Architecture Web & Cloud",
@@ -74,7 +116,7 @@ class Command(BaseCommand):
             defaults={
                 "first_name": "Pr. Aminata",
                 "last_name": "Koné",
-                "email": "a.kone@univ-stages.edu",
+                "email": "aminatakone@gmail.com",
                 "role": User.Role.ENCADREUR,
                 "filiere": "Data Science & IA",
                 "specialite": "Machine Learning appliqué",
@@ -88,7 +130,7 @@ class Command(BaseCommand):
             defaults={
                 "first_name": "Youssef",
                 "last_name": "El Amrani",
-                "email": "y.elamrani@etu.univ-stages.edu",
+                "email": "youssefelamrani@gmail.com",
                 "role": User.Role.ETUDIANT,
                 "filiere": "Génie Logiciel",
                 "niveau": "Master 2",
@@ -102,7 +144,7 @@ class Command(BaseCommand):
             defaults={
                 "first_name": "Claire",
                 "last_name": "Moreau",
-                "email": "c.moreau@etu.univ-stages.edu",
+                "email": "clairemoreau@gmail.com",
                 "role": User.Role.ETUDIANT,
                 "filiere": "Data Science",
                 "niveau": "Master 1",
@@ -116,7 +158,7 @@ class Command(BaseCommand):
             defaults={
                 "first_name": "Lucas",
                 "last_name": "Bernard",
-                "email": "l.bernard@etu.univ-stages.edu",
+                "email": "lucasbernard@gmail.com",
                 "role": User.Role.ETUDIANT,
                 "filiere": "Cybersécurité",
                 "niveau": "Licence 3",
@@ -181,6 +223,132 @@ class Command(BaseCommand):
                     "les anomalies sur des flux temporels."
                 ),
                 "competences_requises": "Python, Scikit-learn, statistiques, Jupyter.",
+            },
+            {
+                "titre": "Assistant Comptable & Audit Financier",
+                "entreprise": ent3,
+                "domaine": "Finance & Comptabilité",
+                "lieu": OffreStage.Ville.OUAGADOUGOU,
+                "duree_mois": 4,
+                "date_debut": today + timedelta(days=15),
+                "date_limite": today + timedelta(days=45),
+                "description": (
+                    "Participation à la tenue comptable, rapprochements bancaires, préparation des déclarations "
+                    "fiscales et appui aux missions d'audit interne auprès des PME clientes."
+                ),
+                "competences_requises": "Comptabilité SYSCOHADA, Excel avancé, rigueur et confidentialité.",
+            },
+            {
+                "titre": "Chargé de Communication Digitale & Réseaux Sociaux",
+                "entreprise": ent3,
+                "domaine": "Marketing & Communication",
+                "lieu": OffreStage.Ville.ABIDJAN,
+                "duree_mois": 3,
+                "date_debut": today + timedelta(days=20),
+                "date_limite": today + timedelta(days=55),
+                "description": (
+                    "Création de contenus éditoriaux, gestion du calendrier social media, suivi des campagnes "
+                    "publicitaires et analyse des statistiques d'audience."
+                ),
+                "competences_requises": "Rédaction web, Canva/Photoshop, community management, créativité.",
+            },
+            {
+                "titre": "Stagiaire Conducteur de Travaux BTP",
+                "entreprise": ent4,
+                "domaine": "Génie Civil & BTP",
+                "lieu": OffreStage.Ville.BOBO_DIOULASSO,
+                "duree_mois": 6,
+                "date_debut": today + timedelta(days=18),
+                "date_limite": today + timedelta(days=48),
+                "description": (
+                    "Suivi quotidien de chantiers de construction, contrôle qualité des matériaux, "
+                    "coordination des sous-traitants et rédaction des rapports d'avancement."
+                ),
+                "competences_requises": "AutoCAD, lecture de plans, notions de métré et sécurité chantier.",
+            },
+            {
+                "titre": "Assistant Ressources Humaines & Recrutement",
+                "entreprise": ent5,
+                "domaine": "Ressources Humaines",
+                "lieu": OffreStage.Ville.DAKAR,
+                "duree_mois": 3,
+                "date_debut": today + timedelta(days=22),
+                "date_limite": today + timedelta(days=52),
+                "description": (
+                    "Tri des candidatures, planification des entretiens, gestion administrative des dossiers "
+                    "du personnel et appui à l'organisation des formations internes."
+                ),
+                "competences_requises": "Sens relationnel, droit du travail, maîtrise du pack Office.",
+            },
+            {
+                "titre": "Stage Gestion de la Chaîne Logistique (Supply Chain)",
+                "entreprise": ent4,
+                "domaine": "Logistique & Transport",
+                "lieu": OffreStage.Ville.LOME,
+                "duree_mois": 4,
+                "date_debut": today + timedelta(days=25),
+                "date_limite": today + timedelta(days=60),
+                "description": (
+                    "Suivi des approvisionnements, gestion des stocks en entrepôt, planification des livraisons "
+                    "régionales et optimisation des coûts de transport."
+                ),
+                "competences_requises": "Gestion des stocks, Excel, organisation et esprit analytique.",
+            },
+            {
+                "titre": "Technicien Suivi de Projets Agricoles Durables",
+                "entreprise": ent5,
+                "domaine": "Agronomie & Environnement",
+                "lieu": OffreStage.Ville.BOBO_DIOULASSO,
+                "duree_mois": 5,
+                "date_debut": today + timedelta(days=14),
+                "date_limite": today + timedelta(days=45),
+                "description": (
+                    "Accompagnement des coopératives partenaires sur le terrain, collecte de données agronomiques, "
+                    "suivi de l'irrigation solaire et rédaction de fiches techniques."
+                ),
+                "competences_requises": "Bases en agronomie, travail de terrain, rédaction de rapports.",
+            },
+            {
+                "titre": "Stagiaire Juriste d'Entreprise & Contrats",
+                "entreprise": ent3,
+                "domaine": "Droit & Juridique",
+                "lieu": OffreStage.Ville.OUAGADOUGOU,
+                "duree_mois": 3,
+                "date_debut": today + timedelta(days=28),
+                "date_limite": today + timedelta(days=58),
+                "description": (
+                    "Rédaction et relecture de contrats commerciaux, veille juridique OHADA, préparation de dossiers "
+                    "réglementaires et accompagnement de la direction juridique."
+                ),
+                "competences_requises": "Droit des affaires OHADA, rédaction juridique, esprit de synthèse.",
+            },
+            {
+                "titre": "Assistant Commercial & Développement B2B",
+                "entreprise": ent5,
+                "domaine": "Commerce & Gestion",
+                "lieu": OffreStage.Ville.COTONOU,
+                "duree_mois": 4,
+                "date_debut": today + timedelta(days=16),
+                "date_limite": today + timedelta(days=46),
+                "description": (
+                    "Prospection de nouveaux clients professionnels, élaboration de devis commerciaux, "
+                    "suivi du portefeuille clients et participation aux rendez-vous de négociation."
+                ),
+                "competences_requises": "Techniques de vente, aisance orale, CRM et autonomie.",
+            },
+            {
+                "titre": "Stage Contrôle de Gestion & Reporting (Session précédente)",
+                "entreprise": ent3,
+                "domaine": "Finance & Comptabilité",
+                "lieu": OffreStage.Ville.OUAGADOUGOU,
+                "duree_mois": 3,
+                "date_debut": today - timedelta(days=20),
+                "date_limite": today - timedelta(days=5),
+                "description": (
+                    "Suivi budgétaire mensuel, élaboration de tableaux de bord financiers et analyse des écarts "
+                    "pour la direction générale."
+                ),
+                "competences_requises": "Contrôle de gestion, Excel, analyse financière.",
             },
         ]
 

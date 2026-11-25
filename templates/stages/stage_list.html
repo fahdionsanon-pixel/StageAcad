@@ -47,7 +47,7 @@
               <td class="px-5 py-4">
                 <div class="flex items-center gap-2">
                   <div class="w-20 bg-slate-200 rounded-full h-2">
-                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ stage.dernier_avancement }}%"></div>
+                    <div class="bg-[#14213D] h-2 rounded-full" style="width: {{ stage.dernier_avancement }}%"></div>
                   </div>
                   <span class="text-xs font-medium text-slate-600">{{ stage.dernier_avancement }}%</span>
                 </div>
@@ -62,7 +62,7 @@
                 </span>
               </td>
               <td class="px-5 py-4 text-right">
-                <a href="{% url 'stages:stage_detail' stage.pk %}" class="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold hover:bg-blue-100">
+                <a href="{% url 'stages:stage_detail' stage.pk %}" class="px-3.5 py-1.5 rounded-full bg-[#14213D] text-[#F4EDE4] text-xs font-semibold hover:bg-[#1C2E52] transition">
                   Détails &amp; Suivi
                 </a>
               </td>

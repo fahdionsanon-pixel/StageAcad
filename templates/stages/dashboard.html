@@ -4,32 +4,32 @@
 {% block content %}
   {% if user.is_etudiant %}
     <!-- ACCUEIL ÉTUDIANT (Design moderne épuré) -->
-    <!-- Carte de bienvenue bleu clair -->
-    <section class="rounded-2xl bg-[#EBF3FF] border border-blue-100 p-6 sm:p-8 mb-6">
+    <!-- Carte de bienvenue Bleu Marine (#14213D) + Crème (#F4EDE4) + CTA Corail (#FF6B5B) -->
+    <section class="rounded-2xl bg-[#14213D] text-[#F4EDE4] p-6 sm:p-8 mb-6 shadow-md">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        <h1 class="text-2xl sm:text-3xl font-bold text-[#F4EDE4] tracking-tight">
           Bonjour {{ user.first_name|default:user.display_name }}
         </h1>
-        <p class="text-sm sm:text-base text-slate-600 mt-1.5">
+        <p class="text-sm sm:text-base text-[#F4EDE4]/75 mt-1.5">
           {% if stage_actif %}
-            Votre rapport n°{{ prochain_rapport_num }} est prêt à être déposé pour votre stage chez <span class="font-semibold text-slate-800">{{ stage_actif.entreprise.display_name }}</span>.
+            Votre rapport n°{{ prochain_rapport_num }} est prêt à être déposé pour votre stage chez <span class="font-semibold text-[#F4EDE4]">{{ stage_actif.entreprise.display_name }}</span>.
           {% else %}
             Consultez les offres de stage ouvertes et suivez vos candidatures en temps réel.
           {% endif %}
         </p>
         <div class="mt-5 flex flex-wrap items-center gap-4">
           {% if stage_actif %}
-            <a href="{% url 'stages:stage_detail' stage_actif.pk %}" class="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition">
+            <a href="{% url 'stages:stage_detail' stage_actif.pk %}" class="px-6 py-2.5 rounded-full bg-[#FF6B5B] text-white text-sm font-semibold hover:bg-[#E85A4A] shadow-sm transition">
               Déposer le rapport
             </a>
-            <a href="{% url 'stages:stage_detail' stage_actif.pk %}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">
-              Voir mon dossier
+            <a href="{% url 'stages:stage_detail' stage_actif.pk %}" class="text-sm font-semibold text-[#F4EDE4]/90 hover:text-white transition">
+              Voir mon dossier →
             </a>
           {% else %}
-            <a href="{% url 'stages:offre_list' %}" class="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition">
+            <a href="{% url 'stages:offre_list' %}" class="px-6 py-2.5 rounded-full bg-[#FF6B5B] text-white text-sm font-semibold hover:bg-[#E85A4A] shadow-sm transition">
               Explorer les offres
             </a>
-            <a href="{% url 'stages:candidature_list' %}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">
+            <a href="{% url 'stages:candidature_list' %}" class="text-sm font-semibold text-[#F4EDE4]/90 hover:text-white transition">
               Mes candidatures ({{ nb_candidatures }})
             </a>
           {% endif %}
@@ -53,14 +53,14 @@
           <div class="relative flex flex-col items-start sm:items-center text-left sm:text-center">
             <!-- Ligne de connexion desktop -->
             {% if not forloop.last %}
-              <div class="hidden sm:block absolute top-4 left-1/2 w-full h-0.5 {% if etape.done %}bg-blue-600{% else %}bg-slate-200{% endif %}"></div>
+              <div class="hidden sm:block absolute top-4 left-1/2 w-full h-0.5 {% if etape.done %}bg-[#14213D]{% else %}bg-[#E5DBCE]{% endif %}"></div>
             {% endif %}
 
             <!-- Cercle d'étape -->
             <div class="relative z-10 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold
-              {% if etape.done %}bg-blue-600 text-white
-              {% elif etape.current %}bg-emerald-500 text-white ring-4 ring-emerald-500/20
-              {% else %}bg-white border-2 border-slate-200 text-slate-400{% endif %}">
+              {% if etape.done %}bg-[#14213D] text-[#F4EDE4]
+              {% elif etape.current %}bg-[#FF6B5B] text-white ring-4 ring-[#FF6B5B]/20
+              {% else %}bg-white border-2 border-[#E5DBCE] text-slate-400{% endif %}">
               {% if etape.done %}
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
               {% else %}
@@ -85,7 +85,7 @@
           {% for item in echeances %}
             <div class="py-3.5 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
               <div class="flex items-center gap-3.5">
-                <div class="h-12 w-12 rounded-xl bg-blue-50 text-blue-700 flex flex-col items-center justify-center shrink-0">
+                <div class="h-12 w-12 rounded-xl bg-[#F4EDE4] text-[#14213D] flex flex-col items-center justify-center shrink-0">
                   <span class="text-sm font-extrabold leading-none">{{ item.jour }}</span>
                   <span class="text-[11px] font-medium mt-0.5">{{ item.mois }}</span>
                 </div>
@@ -107,7 +107,7 @@
           <h2 class="text-base font-bold text-slate-900 mb-4">Mon encadreur</h2>
           {% if stage_actif and stage_actif.encadreur %}
             <div class="flex items-center gap-3.5">
-              <div class="h-12 w-12 rounded-full bg-blue-600 text-white font-bold text-sm flex items-center justify-center shrink-0">
+              <div class="h-12 w-12 rounded-full bg-[#14213D] text-[#F4EDE4] font-bold text-sm flex items-center justify-center shrink-0">
                 {{ stage_actif.encadreur.initials }}
               </div>
               <div class="min-w-0">
@@ -126,7 +126,7 @@
 
         {% if stage_actif and stage_actif.encadreur %}
           <a href="mailto:{{ stage_actif.encadreur.email }}?subject=Suivi%20de%20stage%20-%20{{ stage_actif.titre|urlencode }}"
-            class="mt-5 w-full inline-flex items-center justify-center px-4 py-2.5 rounded-full border border-blue-600 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition">
+            class="mt-5 w-full inline-flex items-center justify-center px-4 py-2.5 rounded-full border border-[#14213D] text-[#14213D] text-sm font-semibold hover:bg-[#14213D] hover:text-[#F4EDE4] transition">
             Écrire un message
           </a>
         {% elif stage_actif %}

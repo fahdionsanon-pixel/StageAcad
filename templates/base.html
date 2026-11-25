@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="fr" class="h-full bg-[#F6F8FC]">
+<html lang="fr" class="h-full bg-[#F4EDE4]">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,22 @@
     tailwind.config = {
       theme: {
         extend: {
+          colors: {
+            navy: {
+              DEFAULT: '#14213D',
+              light: '#1C2E52',
+              lighter: '#263B66',
+            },
+            cream: {
+              DEFAULT: '#F4EDE4',
+              light: '#FAF7F2',
+              dark: '#E5DBCE',
+            },
+            coral: {
+              DEFAULT: '#FF6B5B',
+              hover: '#E85A4A',
+            },
+          },
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
           },
@@ -22,59 +38,71 @@
   </script>
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 </head>
-<body class="min-h-full text-slate-800 antialiased">
+<body class="min-h-full text-[#14213D] antialiased">
 
   <div class="min-h-screen flex flex-col {% if user.is_authenticated %}lg:flex-row{% endif %}">
     {% if user.is_authenticated %}
-      <!-- Sidebar Desktop (utilisateur connecté) -->
-      <aside class="hidden lg:flex lg:w-64 lg:flex-col bg-white border-r border-slate-200/80 sticky top-0 h-screen">
-        <div class="h-16 px-6 flex items-center border-b border-slate-100">
-          <a href="{% url 'stages:dashboard' %}" class="flex items-center gap-2.5">
-            <span class="text-lg font-extrabold tracking-tight text-blue-600">StageSearch</span>
+      <!-- Sidebar Desktop Bleu Marine (#14213D) -->
+      <aside class="hidden lg:flex lg:w-64 lg:flex-col bg-[#14213D] text-[#F4EDE4] sticky top-0 h-screen border-r border-white/10">
+        <div class="h-16 px-6 flex items-center border-b border-white/10">
+          <a href="{% url 'stages:dashboard' %}" class="flex items-center gap-2">
+            <span class="text-lg font-extrabold tracking-tight text-[#F4EDE4]">StageSearch</span>
           </a>
         </div>
 
         <nav class="flex-1 px-3 py-5 space-y-1 text-sm font-medium">
           <a href="{% url 'stages:dashboard' %}"
-            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition
-            {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-50 text-blue-600 font-semibold{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            <span>Accueil</span>
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition
+            {% if request.resolver_match.url_name == 'dashboard' %}bg-white/10 text-[#F4EDE4] font-semibold{% else %}text-[#F4EDE4]/75 hover:bg-white/5 hover:text-[#F4EDE4]{% endif %}">
+            <span class="flex items-center gap-3">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              <span>Accueil</span>
+            </span>
+            {% if request.resolver_match.url_name == 'dashboard' %}<span class="h-2 w-2 rounded-full bg-[#FF6B5B]"></span>{% endif %}
           </a>
 
           <a href="{% url 'stages:offre_list' %}"
-            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition
-            {% if 'offre' in request.resolver_match.url_name %}bg-blue-50 text-blue-600 font-semibold{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            <span>Offres</span>
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition
+            {% if 'offre' in request.resolver_match.url_name %}bg-white/10 text-[#F4EDE4] font-semibold{% else %}text-[#F4EDE4]/75 hover:bg-white/5 hover:text-[#F4EDE4]{% endif %}">
+            <span class="flex items-center gap-3">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <span>Offres</span>
+            </span>
+            {% if 'offre' in request.resolver_match.url_name %}<span class="h-2 w-2 rounded-full bg-[#FF6B5B]"></span>{% endif %}
           </a>
 
           {% if not user.is_encadreur %}
             <a href="{% url 'stages:candidature_list' %}"
-              class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition
-              {% if 'candidature' in request.resolver_match.url_name %}bg-blue-50 text-blue-600 font-semibold{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-              <span>{% if user.is_etudiant %}Mes candidatures{% else %}Candidatures{% endif %}</span>
+              class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition
+              {% if 'candidature' in request.resolver_match.url_name %}bg-white/10 text-[#F4EDE4] font-semibold{% else %}text-[#F4EDE4]/75 hover:bg-white/5 hover:text-[#F4EDE4]{% endif %}">
+              <span class="flex items-center gap-3">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span>{% if user.is_etudiant %}Mes candidatures{% else %}Candidatures{% endif %}</span>
+              </span>
+              {% if 'candidature' in request.resolver_match.url_name %}<span class="h-2 w-2 rounded-full bg-[#FF6B5B]"></span>{% endif %}
             </a>
           {% endif %}
 
           <a href="{% url 'stages:stage_list' %}"
-            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition
-            {% if 'stage' in request.resolver_match.url_name %}bg-blue-50 text-blue-600 font-semibold{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-            <span>{% if user.is_etudiant %}Mon stage{% else %}Stages &amp; Suivi{% endif %}</span>
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition
+            {% if 'stage' in request.resolver_match.url_name %}bg-white/10 text-[#F4EDE4] font-semibold{% else %}text-[#F4EDE4]/75 hover:bg-white/5 hover:text-[#F4EDE4]{% endif %}">
+            <span class="flex items-center gap-3">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+              <span>{% if user.is_etudiant %}Mon stage{% else %}Stages &amp; Suivi{% endif %}</span>
+            </span>
+            {% if 'stage' in request.resolver_match.url_name %}<span class="h-2 w-2 rounded-full bg-[#FF6B5B]"></span>{% endif %}
           </a>
 
           {% if user.is_entreprise or user.is_admin_role %}
             <div class="pt-4">
-              <a href="{% url 'stages:offre_create' %}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition">
+              <a href="{% url 'stages:offre_create' %}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-full bg-[#FF6B5B] text-white text-sm font-semibold hover:bg-[#E85A4A] shadow-sm transition">
                 <span>+ Publier une offre</span>
               </a>
             </div>
           {% endif %}
 
           {% if user.is_staff %}
-            <a href="/admin/" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition">
+            <a href="/admin/" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[#F4EDE4]/65 hover:bg-white/5 hover:text-[#F4EDE4] transition">
               <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
               <span>Admin Django</span>
             </a>
@@ -82,19 +110,19 @@
         </nav>
 
         <!-- Profil utilisateur en bas de sidebar -->
-        <div class="p-4 border-t border-slate-100">
-          <a href="{% url 'accounts:profile' %}" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition">
-            <span class="h-9 w-9 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+        <div class="p-4 border-t border-white/10">
+          <a href="{% url 'accounts:profile' %}" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition">
+            <span class="h-9 w-9 rounded-full bg-[#F4EDE4] text-[#14213D] text-xs font-extrabold flex items-center justify-center shrink-0">
               {{ user.initials }}
             </span>
             <div class="min-w-0 flex-1">
-              <p class="text-sm font-semibold text-slate-900 truncate">{{ user.display_name }}</p>
-              <p class="text-xs text-slate-500 truncate">{{ user.get_role_display }}</p>
+              <p class="text-sm font-semibold text-[#F4EDE4] truncate">{{ user.display_name }}</p>
+              <p class="text-xs text-[#F4EDE4]/65 truncate">{{ user.get_role_display }}</p>
             </div>
           </a>
           <form method="post" action="{% url 'accounts:logout' %}" class="mt-2">
             {% csrf_token %}
-            <button type="submit" class="w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 transition">
+            <button type="submit" class="w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium text-[#F4EDE4]/70 hover:text-[#FF6B5B] hover:bg-white/5 transition">
               Se déconnecter
             </button>
           </form>
@@ -102,40 +130,38 @@
       </aside>
 
       <!-- Barre mobile / tablette (utilisateur connecté) -->
-      <header class="lg:hidden bg-white border-b border-slate-200 sticky top-0 z-30">
+      <header class="lg:hidden bg-[#14213D] text-[#F4EDE4] border-b border-white/10 sticky top-0 z-30">
         <div class="px-4 h-14 flex items-center justify-between">
-          <a href="{% url 'stages:dashboard' %}" class="flex items-center gap-2">
-            <span class="font-extrabold text-blue-600">StageSearch</span>
-          </a>
+          <a href="{% url 'stages:dashboard' %}" class="font-extrabold text-[#F4EDE4]">StageSearch</a>
           <div class="flex items-center gap-3 text-xs font-medium">
-            <a href="{% url 'stages:dashboard' %}" class="text-slate-600 hover:text-blue-600">Accueil</a>
-            <a href="{% url 'stages:offre_list' %}" class="text-slate-600 hover:text-blue-600">Offres</a>
+            <a href="{% url 'stages:dashboard' %}" class="text-[#F4EDE4]/80 hover:text-white">Accueil</a>
+            <a href="{% url 'stages:offre_list' %}" class="text-[#F4EDE4]/80 hover:text-white">Offres</a>
             {% if not user.is_encadreur %}
-              <a href="{% url 'stages:candidature_list' %}" class="text-slate-600 hover:text-blue-600">Candidatures</a>
+              <a href="{% url 'stages:candidature_list' %}" class="text-[#F4EDE4]/80 hover:text-white">Candidatures</a>
             {% endif %}
-            <a href="{% url 'stages:stage_list' %}" class="text-slate-600 hover:text-blue-600">Stage</a>
-            <a href="{% url 'accounts:profile' %}" class="h-7 w-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center">
+            <a href="{% url 'stages:stage_list' %}" class="text-[#F4EDE4]/80 hover:text-white">Stage</a>
+            <a href="{% url 'accounts:profile' %}" class="h-7 w-7 rounded-full bg-[#F4EDE4] text-[#14213D] font-bold flex items-center justify-center">
               {{ user.initials }}
             </a>
           </div>
         </div>
       </header>
     {% else %}
-      <!-- Barre de navigation visiteur non connecté -->
-      <header class="bg-white border-b border-slate-200/80 sticky top-0 z-30">
+      <!-- Barre de navigation visiteur non connecté (Bleu Marine + Crème + Corail) -->
+      <header class="bg-[#14213D] text-[#F4EDE4] border-b border-white/10 sticky top-0 z-30">
         <div class="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div class="flex items-center gap-8">
-            <a href="{% url 'stages:home' %}" class="flex items-center gap-2.5">
-              <span class="text-lg font-extrabold tracking-tight text-blue-600">StageSearch</span>
+            <a href="{% url 'stages:home' %}" class="flex items-center gap-2">
+              <span class="text-lg font-extrabold tracking-tight text-[#F4EDE4]">StageSearch</span>
             </a>
             <nav class="hidden sm:flex items-center gap-6 text-sm font-medium">
-              <a href="{% url 'stages:home' %}" class="text-slate-600 hover:text-blue-600">Accueil</a>
-              <a href="{% url 'stages:offre_list' %}" class="text-slate-600 hover:text-blue-600">Offres de stage</a>
+              <a href="{% url 'stages:home' %}" class="text-[#F4EDE4]/80 hover:text-[#F4EDE4] transition">Accueil</a>
+              <a href="{% url 'stages:offre_list' %}" class="text-[#F4EDE4]/80 hover:text-[#F4EDE4] transition">Offres de stage</a>
             </nav>
           </div>
-          <div class="flex items-center gap-3">
-            <a href="{% url 'accounts:login' %}" class="px-4 py-2 text-sm font-medium text-slate-700 hover:text-blue-600">Connexion</a>
-            <a href="{% url 'accounts:register' %}" class="px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition">
+          <div class="flex items-center gap-4">
+            <a href="{% url 'accounts:login' %}" class="px-3 py-2 text-sm font-medium text-[#F4EDE4]/90 hover:text-white transition">Connexion</a>
+            <a href="{% url 'accounts:register' %}" class="px-5 py-2 rounded-full bg-[#FF6B5B] text-white text-sm font-semibold hover:bg-[#E85A4A] shadow-sm transition">
               Créer un compte
             </a>
           </div>
@@ -151,7 +177,7 @@
             <div class="rounded-xl border px-4 py-3 text-sm font-medium
               {% if message.tags == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800
               {% elif message.tags == 'error' %}bg-red-50 border-red-200 text-red-800
-              {% else %}bg-blue-50 border-blue-200 text-blue-800{% endif %}">
+              {% else %}bg-[#14213D] border-[#14213D] text-[#F4EDE4]{% endif %}">
               {{ message }}
             </div>
           {% endfor %}
@@ -163,9 +189,9 @@
       </main>
 
       {% if not user.is_authenticated %}
-        <footer class="bg-white border-t border-slate-200/80 py-6 mt-12">
-          <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500">
-            <p>StageSearch — Plateforme de gestion des stages académiques</p>
+        <footer class="bg-[#14213D] text-[#F4EDE4]/75 border-t border-white/10 py-6 mt-12">
+          <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
+            <p class="font-semibold text-[#F4EDE4]">StageSearch — Plateforme de gestion des stages académiques</p>
             <p>Offres • Candidatures • Affectation des encadreurs • Suivi</p>
           </div>
         </footer>

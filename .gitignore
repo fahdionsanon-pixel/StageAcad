@@ -23,3 +23,6 @@ local_settings.py
 .idea/
 .DS_Store
 Thumbs.db
+
+# Documents locaux (rapport, PowerPoint, fiches)
+docs/

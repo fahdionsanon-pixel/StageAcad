@@ -9,7 +9,7 @@
         {% if user.is_etudiant %}Mes candidatures{% else %}Candidatures{% endif %}
       </h1>
     </div>
-    <a href="{% url 'stages:offre_list' %}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition self-start sm:self-auto">
+    <a href="{% url 'stages:offre_list' %}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[#FF6B5B] text-white text-sm font-semibold hover:bg-[#E85A4A] shadow-sm transition self-start sm:self-auto">
       Voir les offres
     </a>
   </div>
@@ -18,22 +18,22 @@
   <div class="flex flex-wrap items-center gap-2.5 mb-6">
     <a href="{% url 'stages:candidature_list' %}"
       class="px-4 py-2 rounded-full text-sm font-semibold transition
-      {% if not statut_filtre %}bg-blue-600 text-white shadow-sm{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+      {% if not statut_filtre %}bg-[#14213D] text-[#F4EDE4] shadow-sm{% else %}bg-[#FAF7F2] border border-[#E5DBCE] text-[#14213D]/75 hover:bg-white{% endif %}">
       Toutes <span class="ml-1 opacity-80">{{ counts.all }}</span>
     </a>
     <a href="{% url 'stages:candidature_list' %}?statut=EN_ATTENTE"
       class="px-4 py-2 rounded-full text-sm font-semibold transition
-      {% if statut_filtre == 'EN_ATTENTE' %}bg-blue-600 text-white shadow-sm{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+      {% if statut_filtre == 'EN_ATTENTE' %}bg-[#14213D] text-[#F4EDE4] shadow-sm{% else %}bg-[#FAF7F2] border border-[#E5DBCE] text-[#14213D]/75 hover:bg-white{% endif %}">
       En attente <span class="ml-1 opacity-80">{{ counts.EN_ATTENTE }}</span>
     </a>
     <a href="{% url 'stages:candidature_list' %}?statut=ACCEPTEE"
       class="px-4 py-2 rounded-full text-sm font-semibold transition
-      {% if statut_filtre == 'ACCEPTEE' %}bg-blue-600 text-white shadow-sm{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+      {% if statut_filtre == 'ACCEPTEE' %}bg-[#14213D] text-[#F4EDE4] shadow-sm{% else %}bg-[#FAF7F2] border border-[#E5DBCE] text-[#14213D]/75 hover:bg-white{% endif %}">
       Acceptée <span class="ml-1 opacity-80">{{ counts.ACCEPTEE }}</span>
     </a>
     <a href="{% url 'stages:candidature_list' %}?statut=REFUSEE"
       class="px-4 py-2 rounded-full text-sm font-semibold transition
-      {% if statut_filtre == 'REFUSEE' %}bg-blue-600 text-white shadow-sm{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+      {% if statut_filtre == 'REFUSEE' %}bg-[#14213D] text-[#F4EDE4] shadow-sm{% else %}bg-[#FAF7F2] border border-[#E5DBCE] text-[#14213D]/75 hover:bg-white{% endif %}">
       Refusée <span class="ml-1 opacity-80">{{ counts.REFUSEE }}</span>
     </a>
   </div>
