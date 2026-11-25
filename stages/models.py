@@ -11,11 +11,8 @@ class OffreStage(models.Model):
         BOBO_DIOULASSO = "Bobo-Dioulasso", "Bobo-Dioulasso"
         ABIDJAN = "Abidjan", "Abidjan"
         DAKAR = "Dakar", "Dakar"
-        BAMAKO = "Bamako", "Bamako"
         LOME = "Lomé", "Lomé"
         COTONOU = "Cotonou", "Cotonou"
-        NIAMEY = "Niamey", "Niamey"
-        TELETRAVAIL = "Télétravail", "Télétravail"
 
     titre = models.CharField(max_length=200, verbose_name="Intitulé du stage")
     entreprise = models.ForeignKey(
@@ -32,8 +29,8 @@ class OffreStage(models.Model):
         verbose_name="Ville du stage",
     )
     duree_mois = models.PositiveIntegerField(
-        default=3,
-        validators=[MinValueValidator(1), MaxValueValidator(24)],
+        default=2,
+        validators=[MinValueValidator(2), MaxValueValidator(24)],
         verbose_name="Durée (mois)",
     )
     date_debut = models.DateField(verbose_name="Date de début souhaitée")

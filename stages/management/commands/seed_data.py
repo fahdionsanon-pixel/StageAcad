@@ -167,9 +167,51 @@ class Command(BaseCommand):
         etu3.set_password("demo1234")
         etu3.save()
 
+        etu4, _ = User.objects.get_or_create(
+            username="etudiant4",
+            defaults={
+                "first_name": "Salimata",
+                "last_name": "Sawadogo",
+                "email": "salimatasawadogo@gmail.com",
+                "role": User.Role.ETUDIANT,
+                "filiere": "Finance & Comptabilité",
+                "niveau": "Master 1",
+            },
+        )
+        etu4.set_password("demo1234")
+        etu4.save()
+
+        etu5, _ = User.objects.get_or_create(
+            username="etudiant5",
+            defaults={
+                "first_name": "Moussa",
+                "last_name": "Diallo",
+                "email": "moussadiallo@gmail.com",
+                "role": User.Role.ETUDIANT,
+                "filiere": "Génie Civil",
+                "niveau": "Licence 3",
+            },
+        )
+        etu5.set_password("demo1234")
+        etu5.save()
+
+        etu6, _ = User.objects.get_or_create(
+            username="etudiant6",
+            defaults={
+                "first_name": "Koffi",
+                "last_name": "Mensah",
+                "email": "koffimensah@gmail.com",
+                "role": User.Role.ETUDIANT,
+                "filiere": "Marketing & Gestion",
+                "niveau": "Master 2",
+            },
+        )
+        etu6.set_password("demo1234")
+        etu6.save()
+
         offres_data = [
             {
-                "titre": "Développeur Web Full-Stack Django / Python",
+                "titre": "Stage de Développement Web",
                 "entreprise": ent1,
                 "domaine": "Développement Web",
                 "lieu": OffreStage.Ville.OUAGADOUGOU,
@@ -178,12 +220,12 @@ class Command(BaseCommand):
                 "date_limite": today + timedelta(days=45),
                 "description": (
                     "Vous intégrerez l'équipe produit pour concevoir et développer de nouvelles fonctionnalités "
-                    "sur notre plateforme SaaS en Django, PostgreSQL et Tailwind CSS."
+                    "sur notre plateforme web en Django et Python."
                 ),
                 "competences_requises": "Python, Django, HTML/CSS, Git, bases de données relationnelles.",
             },
             {
-                "titre": "Stage Data Analyst & Visualisation BI",
+                "titre": "Stage d'Analyse de Données",
                 "entreprise": ent2,
                 "domaine": "Data & IA",
                 "lieu": OffreStage.Ville.BOBO_DIOULASSO,
@@ -192,12 +234,12 @@ class Command(BaseCommand):
                 "date_limite": today + timedelta(days=60),
                 "description": (
                     "Analyse des indicateurs de performance clients, création de tableaux de bord automatisés "
-                    "et nettoyage de pipelines de données."
+                    "et nettoyage de données."
                 ),
-                "competences_requises": "Python, Pandas, SQL, Power BI ou Tableau.",
+                "competences_requises": "Python, Pandas, SQL, Excel ou Power BI.",
             },
             {
-                "titre": "Ingénieur DevOps & CI/CD Junior",
+                "titre": "Stage en Administration Systèmes et Réseaux",
                 "entreprise": ent1,
                 "domaine": "Cloud & DevOps",
                 "lieu": OffreStage.Ville.ABIDJAN,
@@ -205,13 +247,13 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=15),
                 "date_limite": today + timedelta(days=40),
                 "description": (
-                    "Automatisation des déploiements Docker, mise en place de pipelines GitHub Actions "
-                    "et monitoring d'applications web."
+                    "Maintenance des serveurs Linux, gestion des sauvegardes, déploiement d'applications "
+                    "et suivi du réseau interne."
                 ),
-                "competences_requises": "Linux, Docker, GitHub Actions, notions de cloud.",
+                "competences_requises": "Linux, réseaux, Docker, sécurité de base.",
             },
             {
-                "titre": "Stage Machine Learning — Détection d'anomalies",
+                "titre": "Stage en Intelligence Artificielle",
                 "entreprise": ent2,
                 "domaine": "Data & IA",
                 "lieu": OffreStage.Ville.DAKAR,
@@ -219,13 +261,12 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=25),
                 "date_limite": today + timedelta(days=50),
                 "description": (
-                    "Prototypage et évaluation de modèles supervisés et non supervisés pour détecter "
-                    "les anomalies sur des flux temporels."
+                    "Préparation de jeux de données et création de modèles prédictifs pour l'analyse de tendances."
                 ),
-                "competences_requises": "Python, Scikit-learn, statistiques, Jupyter.",
+                "competences_requises": "Python, statistiques, apprentissage automatique.",
             },
             {
-                "titre": "Assistant Comptable & Audit Financier",
+                "titre": "Stage de Comptabilité et Audit",
                 "entreprise": ent3,
                 "domaine": "Finance & Comptabilité",
                 "lieu": OffreStage.Ville.OUAGADOUGOU,
@@ -234,12 +275,12 @@ class Command(BaseCommand):
                 "date_limite": today + timedelta(days=45),
                 "description": (
                     "Participation à la tenue comptable, rapprochements bancaires, préparation des déclarations "
-                    "fiscales et appui aux missions d'audit interne auprès des PME clientes."
+                    "fiscales et appui aux missions d'audit interne."
                 ),
-                "competences_requises": "Comptabilité SYSCOHADA, Excel avancé, rigueur et confidentialité.",
+                "competences_requises": "Comptabilité SYSCOHADA, Excel, rigueur et confidentialité.",
             },
             {
-                "titre": "Chargé de Communication Digitale & Réseaux Sociaux",
+                "titre": "Stage de Communication",
                 "entreprise": ent3,
                 "domaine": "Marketing & Communication",
                 "lieu": OffreStage.Ville.ABIDJAN,
@@ -247,13 +288,13 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=20),
                 "date_limite": today + timedelta(days=55),
                 "description": (
-                    "Création de contenus éditoriaux, gestion du calendrier social media, suivi des campagnes "
-                    "publicitaires et analyse des statistiques d'audience."
+                    "Création de contenus éditoriaux, gestion des réseaux sociaux et suivi des campagnes "
+                    "de communication."
                 ),
-                "competences_requises": "Rédaction web, Canva/Photoshop, community management, créativité.",
+                "competences_requises": "Rédaction web, Canva, gestion des réseaux sociaux.",
             },
             {
-                "titre": "Stagiaire Conducteur de Travaux BTP",
+                "titre": "Stage de Conducteur de Travaux BTP",
                 "entreprise": ent4,
                 "domaine": "Génie Civil & BTP",
                 "lieu": OffreStage.Ville.BOBO_DIOULASSO,
@@ -261,13 +302,13 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=18),
                 "date_limite": today + timedelta(days=48),
                 "description": (
-                    "Suivi quotidien de chantiers de construction, contrôle qualité des matériaux, "
-                    "coordination des sous-traitants et rédaction des rapports d'avancement."
+                    "Suivi quotidien de chantiers de construction, contrôle qualité des matériaux "
+                    "et rédaction des rapports d'avancement."
                 ),
                 "competences_requises": "AutoCAD, lecture de plans, notions de métré et sécurité chantier.",
             },
             {
-                "titre": "Assistant Ressources Humaines & Recrutement",
+                "titre": "Stage en Ressources Humaines",
                 "entreprise": ent5,
                 "domaine": "Ressources Humaines",
                 "lieu": OffreStage.Ville.DAKAR,
@@ -275,13 +316,13 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=22),
                 "date_limite": today + timedelta(days=52),
                 "description": (
-                    "Tri des candidatures, planification des entretiens, gestion administrative des dossiers "
-                    "du personnel et appui à l'organisation des formations internes."
+                    "Tri des candidatures, planification des entretiens et gestion administrative des dossiers "
+                    "du personnel."
                 ),
                 "competences_requises": "Sens relationnel, droit du travail, maîtrise du pack Office.",
             },
             {
-                "titre": "Stage Gestion de la Chaîne Logistique (Supply Chain)",
+                "titre": "Stage de Gestion Logistique",
                 "entreprise": ent4,
                 "domaine": "Logistique & Transport",
                 "lieu": OffreStage.Ville.LOME,
@@ -289,13 +330,13 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=25),
                 "date_limite": today + timedelta(days=60),
                 "description": (
-                    "Suivi des approvisionnements, gestion des stocks en entrepôt, planification des livraisons "
-                    "régionales et optimisation des coûts de transport."
+                    "Suivi des approvisionnements, gestion des stocks en entrepôt et planification des livraisons "
+                    "régionales."
                 ),
-                "competences_requises": "Gestion des stocks, Excel, organisation et esprit analytique.",
+                "competences_requises": "Gestion des stocks, Excel, organisation.",
             },
             {
-                "titre": "Technicien Suivi de Projets Agricoles Durables",
+                "titre": "Stage d'Agronomie",
                 "entreprise": ent5,
                 "domaine": "Agronomie & Environnement",
                 "lieu": OffreStage.Ville.BOBO_DIOULASSO,
@@ -303,13 +344,13 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=14),
                 "date_limite": today + timedelta(days=45),
                 "description": (
-                    "Accompagnement des coopératives partenaires sur le terrain, collecte de données agronomiques, "
-                    "suivi de l'irrigation solaire et rédaction de fiches techniques."
+                    "Accompagnement des coopératives partenaires sur le terrain, collecte de données agronomiques "
+                    "et rédaction de fiches techniques."
                 ),
                 "competences_requises": "Bases en agronomie, travail de terrain, rédaction de rapports.",
             },
             {
-                "titre": "Stagiaire Juriste d'Entreprise & Contrats",
+                "titre": "Stage d'Assistant Juridique",
                 "entreprise": ent3,
                 "domaine": "Droit & Juridique",
                 "lieu": OffreStage.Ville.OUAGADOUGOU,
@@ -317,13 +358,12 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=28),
                 "date_limite": today + timedelta(days=58),
                 "description": (
-                    "Rédaction et relecture de contrats commerciaux, veille juridique OHADA, préparation de dossiers "
-                    "réglementaires et accompagnement de la direction juridique."
+                    "Rédaction et relecture de contrats commerciaux, veille juridique OHADA et préparation de dossiers."
                 ),
                 "competences_requises": "Droit des affaires OHADA, rédaction juridique, esprit de synthèse.",
             },
             {
-                "titre": "Assistant Commercial & Développement B2B",
+                "titre": "Stage d'Assistant Commercial",
                 "entreprise": ent5,
                 "domaine": "Commerce & Gestion",
                 "lieu": OffreStage.Ville.COTONOU,
@@ -331,13 +371,13 @@ class Command(BaseCommand):
                 "date_debut": today + timedelta(days=16),
                 "date_limite": today + timedelta(days=46),
                 "description": (
-                    "Prospection de nouveaux clients professionnels, élaboration de devis commerciaux, "
-                    "suivi du portefeuille clients et participation aux rendez-vous de négociation."
+                    "Prospection de nouveaux clients professionnels, élaboration de devis commerciaux "
+                    "et suivi du portefeuille clients."
                 ),
-                "competences_requises": "Techniques de vente, aisance orale, CRM et autonomie.",
+                "competences_requises": "Techniques de vente, aisance orale, autonomie.",
             },
             {
-                "titre": "Stage Contrôle de Gestion & Reporting (Session précédente)",
+                "titre": "Stage de Contrôle de Gestion",
                 "entreprise": ent3,
                 "domaine": "Finance & Comptabilité",
                 "lieu": OffreStage.Ville.OUAGADOUGOU,
@@ -345,8 +385,7 @@ class Command(BaseCommand):
                 "date_debut": today - timedelta(days=20),
                 "date_limite": today - timedelta(days=5),
                 "description": (
-                    "Suivi budgétaire mensuel, élaboration de tableaux de bord financiers et analyse des écarts "
-                    "pour la direction générale."
+                    "Suivi budgétaire mensuel, élaboration de tableaux de bord financiers et analyse des écarts."
                 ),
                 "competences_requises": "Contrôle de gestion, Excel, analyse financière.",
             },
@@ -424,6 +463,71 @@ class Command(BaseCommand):
                 "lettre_motivation": "Je souhaite approfondir mes compétences en Docker et CI/CD au sein de votre équipe.",
             },
         )
+
+        # Candidatures supplémentaires réalistes par des étudiants différents (sans stage actif)
+        extra_cands = [
+            # etudiant4 (Salimata Sawadogo - Finance) : 1 en attente en Finance + 1 refusée en DevOps
+            (
+                offres[4],
+                etu4,
+                "EN_ATTENTE",
+                "Étudiante en Master 1 Finance & Comptabilité, je maîtrise le SYSCOHADA et Excel pour accompagner vos missions d'audit.",
+                "",
+            ),
+            (
+                offres[2],
+                etu4,
+                "REFUSEE",
+                "Je souhaite découvrir l'administration de serveurs et le DevOps au sein de votre entreprise.",
+                "Votre profil Finance est excellent, mais ce poste exige des bases techniques en Linux et Docker.",
+            ),
+            # etudiant5 (Moussa Diallo - Génie Civil) : 1 en attente en BTP + 1 refusée en Droit
+            (
+                offres[6],
+                etu5,
+                "EN_ATTENTE",
+                "Étudiant en Licence 3 Génie Civil, je maîtrise AutoCAD et souhaite participer au suivi de vos chantiers à Bobo-Dioulasso.",
+                "",
+            ),
+            (
+                offres[10],
+                etu5,
+                "REFUSEE",
+                "Je candidate au poste de stagiaire juriste pour découvrir les contrats de construction.",
+                "Nous recherchons un étudiant inscrit en filière Droit des affaires OHADA pour ce stage.",
+            ),
+            # etudiant6 (Koffi Mensah - Marketing & Gestion) : 1 en attente en Marketing + 1 en attente Commerce + 1 refusée en Agronomie
+            (
+                offres[5],
+                etu6,
+                "EN_ATTENTE",
+                "En Master 2 Marketing, je gère déjà des campagnes digitales et souhaite rejoindre votre équipe à Abidjan.",
+                "",
+            ),
+            (
+                offres[11],
+                etu6,
+                "EN_ATTENTE",
+                "Passionné par le développement commercial B2B, je suis disponible pour 4 mois à Cotonou.",
+                "",
+            ),
+            (
+                offres[9],
+                etu6,
+                "REFUSEE",
+                "Je souhaite accompagner vos coopératives agricoles dans le suivi de projets à Bobo-Dioulasso.",
+                "Ce stage technique nécessite une formation en agronomie. Merci pour votre intérêt.",
+            ),
+        ]
+
+        for offre_obj, etu_obj, statut_cible, lettre, motif in extra_cands:
+            cand, created = Candidature.objects.get_or_create(
+                offre=offre_obj,
+                etudiant=etu_obj,
+                defaults={"lettre_motivation": lettre},
+            )
+            if created and statut_cible == "REFUSEE":
+                cand.refuser(commentaire=motif)
 
         self.stdout.write(self.style.SUCCESS("Données de démonstration créées avec succès !"))
         self.stdout.write("Comptes de test :")

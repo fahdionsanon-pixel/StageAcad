@@ -221,7 +221,11 @@ def dashboard(request):
 
 def offre_list(request):
     offres = OffreStage.objects.select_related("entreprise")
-    if not (request.user.is_authenticated and (request.user.is_admin_role or request.user.is_entreprise)):
+    if request.user.is_authenticated and request.user.is_admin_role:
+        pass
+    elif request.user.is_authenticated and request.user.is_entreprise:
+        offres = offres.filter(Q(est_active=True) | Q(entreprise=request.user))
+    else:
         offres = offres.filter(est_active=True)
 
     q = request.GET.get("q", "").strip()
@@ -252,22 +256,36 @@ def offre_list(request):
 def offre_detail(request, pk):
     offre = get_object_or_404(OffreStage.objects.select_related("entreprise"), pk=pk)
     deja_postule = None
+    stage_en_cours = None
     form = None
 
     if request.user.is_authenticated and request.user.is_etudiant:
         deja_postule = Candidature.objects.filter(offre=offre, etudiant=request.user).first()
+        stage_en_cours = Stage.objects.filter(
+            etudiant=request.user,
+            statut__in=[Stage.Statut.EN_ATTENTE_ENCADREUR, Stage.Statut.EN_COURS],
+        ).first()
+
         if not deja_postule and offre.est_ouverte:
-            if request.method == "POST":
-                form = CandidatureForm(request.POST, request.FILES)
-                if form.is_valid():
-                    candidature = form.save(commit=False)
-                    candidature.offre = offre
-                    candidature.etudiant = request.user
-                    candidature.save()
-                    messages.success(request, "Votre candidature a été envoyée avec succès.")
+            if stage_en_cours:
+                if request.method == "POST":
+                    messages.error(
+                        request,
+                        "Vous avez déjà un stage en cours. Vous ne pouvez pas déposer une nouvelle candidature avant la fin de ce stage.",
+                    )
                     return redirect("stages:offre_detail", pk=offre.pk)
             else:
-                form = CandidatureForm()
+                if request.method == "POST":
+                    form = CandidatureForm(request.POST, request.FILES)
+                    if form.is_valid():
+                        candidature = form.save(commit=False)
+                        candidature.offre = offre
+                        candidature.etudiant = request.user
+                        candidature.save()
+                        messages.success(request, "Votre candidature a été envoyée avec succès.")
+                        return redirect("stages:offre_detail", pk=offre.pk)
+                else:
+                    form = CandidatureForm()
 
     peut_gerer = request.user.is_authenticated and (
         request.user.is_admin_role or offre.entreprise_id == request.user.id
@@ -280,6 +298,7 @@ def offre_detail(request, pk):
         {
             "offre": offre,
             "deja_postule": deja_postule,
+            "stage_en_cours": stage_en_cours,
             "form": form,
             "peut_gerer": peut_gerer,
             "candidatures": candidatures,

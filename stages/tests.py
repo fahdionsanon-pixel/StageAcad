@@ -116,6 +116,37 @@ class StageWorkflowTests(TestCase):
         resp = self.client.get(reverse("stages:offre_create"))
         self.assertEqual(resp.status_code, 403)
 
+    def test_etudiant_with_active_stage_cannot_apply_again(self):
+        today = timezone.localdate()
+        offre2 = OffreStage.objects.create(
+            titre="Deuxième offre",
+            entreprise=self.entreprise,
+            domaine="Informatique",
+            lieu=OffreStage.Ville.BOBO_DIOULASSO,
+            duree_mois=2,
+            date_debut=today + timedelta(days=10),
+            date_limite=today + timedelta(days=30),
+            description="Deuxième mission.",
+        )
+        # Crée un stage en cours pour l'étudiant
+        stage = Stage.objects.create(
+            etudiant=self.etudiant,
+            entreprise=self.entreprise,
+            titre="Stage actif",
+            date_debut=today,
+            date_fin=today + timedelta(days=60),
+            statut=Stage.Statut.EN_COURS,
+        )
+        self.client.login(username="etu_test", password="password123")
+        self.client.post(reverse("stages:offre_detail", args=[offre2.pk]), {"lettre_motivation": "Test"})
+        self.assertFalse(Candidature.objects.filter(offre=offre2, etudiant=self.etudiant).exists())
+
+        # Une fois le stage terminé, l'étudiant peut à nouveau postuler
+        stage.statut = Stage.Statut.TERMINE
+        stage.save()
+        self.client.post(reverse("stages:offre_detail", args=[offre2.pk]), {"lettre_motivation": "Maintenant libre"})
+        self.assertTrue(Candidature.objects.filter(offre=offre2, etudiant=self.etudiant).exists())
+
     def test_pages_render_for_public_and_student(self):
         self.assertEqual(self.client.get(reverse("stages:home")).status_code, 200)
         self.assertEqual(self.client.get(reverse("stages:offre_list")).status_code, 200)

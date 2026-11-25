@@ -63,7 +63,7 @@
               <span>Ville : {{ offre.get_lieu_display }}</span>
             </p>
             <p class="text-xs text-slate-500 mt-2">Début : {{ offre.date_debut|date:"d/m/Y" }} • {{ offre.duree_mois }} mois</p>
-            <p class="text-sm text-slate-500 mt-3">{{ offre.description|truncatewords:24 }}</p>
+            <p class="text-sm text-slate-500 mt-3 line-clamp-2">{{ offre.description|truncatewords:11 }}</p>
           </div>
           <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
             <span class="text-slate-500">Limite : {{ offre.date_limite|date:"d/m/Y" }}</span>

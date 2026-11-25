@@ -52,7 +52,7 @@
                 <svg class="w-3.5 h-3.5 shrink-0 text-[#FF6B5B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span>Ville : {{ offre.get_lieu_display }}</span>
               </p>
-              <p class="text-sm text-[#14213D]/70 mt-3">{{ offre.description|truncatewords:22 }}</p>
+              <p class="text-sm text-[#14213D]/70 mt-3 line-clamp-2">{{ offre.description|truncatewords:11 }}</p>
             </div>
             <div class="mt-5 pt-3.5 border-t border-[#E5DBCE] flex items-center justify-between text-xs text-[#14213D]/65">
               <span>Date limite : {{ offre.date_limite|date:"d/m/Y" }}</span>

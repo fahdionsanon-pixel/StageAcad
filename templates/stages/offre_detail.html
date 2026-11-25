@@ -80,6 +80,16 @@
             </div>
           {% elif not offre.est_ouverte %}
             <p class="text-sm text-slate-500">Les candidatures pour cette offre sont clôturées.</p>
+          {% elif stage_en_cours %}
+            <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-900">
+              <p class="font-semibold">Stage en cours détecté</p>
+              <p class="mt-1 text-xs leading-relaxed">
+                Vous avez déjà un stage actif (« {{ stage_en_cours.titre }} »). Vous ne pouvez plus déposer de nouvelle candidature jusqu'à la fin de votre stage en cours.
+              </p>
+              <a href="{% url 'stages:stage_detail' stage_en_cours.pk %}" class="inline-block mt-3 text-xs font-bold text-[#14213D] underline hover:text-[#FF6B5B]">
+                Accéder à mon stage en cours →
+              </a>
+            </div>
           {% else %}
             <form method="post" enctype="multipart/form-data" class="space-y-4">
               {% csrf_token %}
