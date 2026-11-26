@@ -5,10 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}StageSearch — Gestion des Stages Académiques{% endblock %}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <script src="{% static 'js/tailwind.js' %}"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -187,15 +185,6 @@
       <main class="flex-1 {% if user.is_authenticated %}max-w-5xl{% else %}max-w-6xl{% endif %} w-full mx-auto px-4 sm:px-8 py-8">
         {% block content %}{% endblock %}
       </main>
-
-      {% if not user.is_authenticated %}
-        <footer class="bg-[#14213D] text-[#F4EDE4]/75 border-t border-white/10 py-6 mt-12">
-          <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
-            <p class="font-semibold text-[#F4EDE4]">StageSearch — Plateforme de gestion des stages académiques</p>
-            <p>Offres • Candidatures • Affectation des encadreurs • Suivi</p>
-          </div>
-        </footer>
-      {% endif %}
     </div>
   </div>
 
